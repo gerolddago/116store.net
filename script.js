@@ -1,188 +1,135 @@
-window.addEventListener("load",()=> {
-    const canvas = document.querySelector("#canvas");
-    const ctx = canvas.getContext("2d");
-    let start_background_color = "white";
+const canvas = document.querySelector("canvas"),
+toolBtns = document.querySelectorAll(".tool"),
+fillColor = document.querySelector("#fill-color"),
+sizeSlider = document.querySelector("#size-slider"),
+colorBtns = document.querySelectorAll(".colors .option"),
+colorPicker = document.querySelector("#color-picker"),
+clearCanvas = document.querySelector(".clear-canvas"),
+savePay = document.querySelector(".save-pay"),
+ctx = canvas.getContext("2d");
 
-    /*let leftPosition;
-    let topPosition;
-    let minusDrawX;
-    let minusDrawY;
-    
-    canvas.style.position = "absolute";
-    canvas.style.left = "27%";
-    canvas.style.top = "23%";*/
+// global variables with default value
+let prevMouseX, prevMouseY, snapshot,
+isDrawing = false,
+selectedTool = "brush",
+brushWidth = 7,
+selectedColor = "#000";
 
-    //Resizing
-    canvas.height = 500;
-    canvas.width = 300; 
-      
-    ctx.lineWidth = 7;
-    let draw_color = "black";
-    let draw_width = 7;
-
-
-    
-    function change_color(e){
-        draw_color = e.style.background;
-    }
-
-    
- 
-    let painting = false;
-    function startPosition(e){
-        painting = true;
-        draw(e);
-    }
-    function finishedPosition(){
-        painting = false;
-        ctx.beginPath();
-    }
-    function draw(e){
-        if(!painting)return;
-        ctx.Width = 7;
-        ctx.lineCap = "round";
-
-        ctx.lineTo((e.clientX)-390,(e.clientY)-180);
-        ctx.stroke();
-        ctx.beginPath();
-        ctx.moveTo((e.clientX)-390,(e.clientY)-180);
-    }
-
-function onSave(){
-    canvas.toBlob((blob)=>{
-        const timestamp = Date.now().toString();
-        const a = document.createElement('a');
-        document.body.append(a);
-        a.download = `CREATION.png`;
-        a.href = URL.createObjectURL(blob);
-        console.log(URL.createObjectURL(blob));
-        a.click();
-        a.remove();
-    })
+const setCanvasBackground = () => {
+// setting whole canvas background to white, so the downloaded img background will be white
+ctx.fillStyle = "#fff";
+ctx.fillRect(0, 0, canvas.width, canvas.height);
+ctx.fillStyle = selectedColor; // setting fillstyle back to the selectedColor, it'll be the brush color
 }
-document.querySelector('#save').addEventListener('click',onSave);
 
+window.addEventListener("load", () => {
+// setting canvas width/height.. offsetwidth/height returns viewable width/height of an element
+canvas.width = canvas.offsetWidth;
+canvas.height = canvas.offsetHeight;
+setCanvasBackground();
+});
 
-
-//EventListeners
-canvas.addEventListener("mousedown",startPosition);
-canvas.addEventListener("mouseup",finishedPosition);
-canvas.addEventListener("mousemove",draw);
-
-function clear_canvas(){
-    ctx.fillStyle = start_background_color;
-    ctx.clearRect(0,0,canvas.width,canvas.height);
-    ctx.fillRect(0,0,canvas.width,canvas.height);
+const drawRect = (e) => {
+// if fillColor isn't checked draw a rect with border else draw rect with background
+if(!fillColor.checked) {
+// creating circle according to the mouse pointer
+return ctx.strokeRect(e.offsetX, e.offsetY, prevMouseX - e.offsetX, prevMouseY - e.offsetY);
 }
-function undo_last(){
-
+ctx.fillRect(e.offsetX, e.offsetY, prevMouseX - e.offsetX, prevMouseY - e.offsetY);
 }
+
+
+const drawCircle = (e) => {
+ctx.beginPath(); // creating new path to draw circle
+// getting radius for circle according to the mouse pointer
+let radius = Math.sqrt(Math.pow((prevMouseX - e.offsetX), 2) + Math.pow((prevMouseY - e.offsetY), 2));
+ctx.arc(prevMouseX, prevMouseY, radius, 0, 2 * Math.PI); // creating circle according to the mouse pointer
+fillColor.checked ? ctx.fill() : ctx.stroke(); // if fillColor is checked fill circle else draw border circle
+}
+
+
+const drawTriangle = (e) => {
+ctx.beginPath(); // creating new path to draw circle
+ctx.moveTo(prevMouseX, prevMouseY); // moving triangle to the mouse pointer
+ctx.lineTo(e.offsetX, e.offsetY); // creating first line according to the mouse pointer
+ctx.lineTo(prevMouseX * 2 - e.offsetX, e.offsetY); // creating bottom line of triangle
+ctx.closePath(); // closing path of a triangle so the third line draw automatically
+fillColor.checked ? ctx.fill() : ctx.stroke(); // if fillColor is checked fill triangle else draw border
+}
+
+
+const startDraw = (e) => {
+isDrawing = true;
+prevMouseX = e.offsetX; // passing current mouseX position as prevMouseX value
+prevMouseY = e.offsetY; // passing current mouseY position as prevMouseY value
+ctx.lineCap = "round";
+ctx.beginPath(); // creating new path to draw
+ctx.lineWidth = brushWidth; // passing brushSize as line width
+ctx.strokeStyle = selectedColor; // passing selectedColor as stroke style
+ctx.fillStyle = selectedColor; // passing selectedColor as fill style
+// copying canvas data & passing as snapshot value.. this avoids dragging the image
+snapshot = ctx.getImageData(0, 0, canvas.width, canvas.height);
+}
+
+
+const drawing = (e) => {
+if(!isDrawing) return; // if isDrawing is false return from here
+ctx.putImageData(snapshot, 0, 0); // adding copied canvas data on to this canvas
+if(selectedTool === "brush" || selectedTool === "eraser") {
+ctx.lineCap = "round";
+// if selected tool is eraser then set strokeStyle to white
+// to paint white color on to the existing canvas content else set the stroke color to selected color
+ctx.strokeStyle = selectedTool === "eraser" ? "#fff" : selectedColor;
+ctx.lineCap = "round";
+ctx.lineTo(e.offsetX, e.offsetY); // creating line according to the mouse pointer
+ctx.stroke(); // drawing/filling line with color
+} else if(selectedTool === "rectangle"){
+drawRect(e);
+} else if(selectedTool === "circle"){
+drawCircle(e);
+} else {
+drawTriangle(e);
+}
+}
+
+
+toolBtns.forEach(btn => {
+btn.addEventListener("click", () => { // adding click event to all tool option
+// removing active class from the previous option and adding on current clicked option
+document.querySelector(".options .active").classList.remove("active");
+btn.classList.add("active");
+selectedTool = btn.id;
+});
+});
+sizeSlider.addEventListener("change", () => brushWidth = sizeSlider.value); // passing slider value as brushSize
+colorBtns.forEach(btn => {
+btn.addEventListener("click", () => { // adding click event to all color button
+// removing selected class from the previous option and adding on current clicked option
+document.querySelector(".options .selected").classList.remove("selected");
+btn.classList.add("selected");
+// passing selected btn background color as selectedColor value
+selectedColor = window.getComputedStyle(btn).getPropertyValue("background-color");
+});
+});
+colorPicker.addEventListener("change", () => {
+// passing picked color value from color picker to last color btn background
+colorPicker.parentElement.style.background = colorPicker.value;
+colorPicker.parentElement.click();
+});
+clearCanvas.addEventListener("click", () => {
+ctx.clearRect(0, 0, canvas.width, canvas.height); // clearing whole canvas
+setCanvasBackground();
+});
+savePay.addEventListener("click", () => {
+const link = document.createElement("a"); // creating <a> element
+//link.download = `${Date.now()}.jpg`; // passing current date as link download value
+link.download = `116 CREATION .jpg`;
+link.href = canvas.toDataURL(); // passing canvasData as link href value
+link.click(); // clicking link to download image
 });
 
 
+canvas.addEventListener("mousedown", startDraw);
+canvas.addEventListener("mousemove", drawing);
+canvas.addEventListener("mouseup", () => isDrawing = false);
 
-
-
-/*FORM1
-var btn = document.querySelector("#btn");
-btn.addEventListener('click', function(e){
-    e.preventDefault()
-    var name = document.querySelector("#name").value;
-    var email = document.querySelector("#email").value;
-    var subject = "ORDER :"+ name + "." + URL.createObjectURL(blob);
-    var drawingCode = URL.createObjectURL(blob);
-    var body = "Name :"+ name + "</br>Email :"+ email + "</br>Subject :"+ subject + "</br>Code :"+ drawingCode;
-
-
-    Email.send({
-        Host:"",
-        Username:"",
-        Password:"",
-        To:"",
-        From: name,
-        Subject:subject,
-        Body: body
-    }).then(message => alert(message));
-})*/
-
-/*FORM2
-let form = document.querySelector("form");
-form.addEventListener("submit",(e)=>{
-    e.preventDefault();
-    document.querySelector("#btn").value="Submiting..";
-    let data = new FormData(form);
-    fetch('https://script.google.com/macros/s/AKfycbyxrL-YrWyh28Mhl0U5mBKvsliIXCuDw0KurtkmNUHe-CO2GePdKr5TbV3smzWnt44rQQ/exec', {method:"POST",body:data}).then(res=> res.json()).then(data=>{document.querySelector("#msg").innerHTML=data; document.querySelector("#btn").value="Submit"});
-})*/
-
-/*FORM3
-let form = document.querySelector("form");
-form.addEventListener("submit",(e)=>{
-    e.preventDefault();
-    fetch(form.action,{
-        method : "POST",
-        body: new FormData(document.querySelector("form")),
-    }).then((html)=>{window.open('d.html','_blank');});
-});*/
-
-//PAYMENTREQUEST
-function goPay(){
-    if (window.PaymentRequest){
-        //si le navigateur de l'utilisateur est supporté
-    
-        //Payment request object
-        const supportedPaymentMethods = [
-            {
-                supportedMethods: ['https://tez.google.com/pay'],
-                data:{
-                    pa: 'xxxxxxxx',
-                    pn: 'xxxxxxxx',
-                    tr: 'xxxxxxxx',
-                    url: 'tehbgdhte',
-                    mc: 'ht',
-                    tn: 'xtcfygv',
-                },
-            }
-        ];
-    
-        //Payment details
-        const paymentDetails = {
-            total:{
-                label: 'Total Cost',
-                amount:{
-                    currency: 'EUR',
-                    value:30
-                }
-            }
-        }
-    
-        //Custom options
-        const options = {}
-    
-        //Create request
-        const paymentRequest = new PaymentRequest(
-            supportedPaymentMethods, paymentDetails, options
-        );
-    
-        paymentRequest.show()
-        .then(payment => console.log(payment))
-        .catch(error =>console.error(error));
-    }
-    else {
-        alert("Transaction failed !")
-    }
-}
-
-
-
-function SendMail(){
-    var params = {
-        from_name : document.querySelector("#name").value,
-        email_id : document.querySelector("#email").value,
-        painted_by : document.querySelector("#paintedby").value,
-        message : (document.querySelector("#code").value + " ;  Painted by : " + document.querySelector("#paintedby").value)
-    }
-    /*emailjs.send("service_2xg7v2f","template_wtabctp",params).then(function(res){alert("Success!"+ res.status);})*/
-    emailjs.send("service_2xg7v2f","template_wtabctp",params).then(() => {
-        
-    })
-}
