@@ -1,45 +1,793 @@
-@import url('https://fonts.googleapis.com/css2?family=Abyssinica+SIL&display=swap');
+/* Import Google font - Roboto Condensed*/
+@import url(https://fonts.googleapis.com/css?family=Roboto+Condensed:400&subset=latin,latin-ext);
+
+
+* {
+
+margin: 0;
+padding: 0;
+
+box-sizing: border-box;
+font-family: 'Roboto Condensed', sans-serif;
+text-transform: uppercase;
+
+}
+#error-format{
+    display: none;
+    position: absolute;
+    top: 0;
+    left: 0;
+    margin: 0;
+    background-color: #000;
+    color: #fff;
+    width: 100%;
+    height: 100% ;
+    min-width: 100%;
+    min-height: 100%;
+    z-index: 5;
+}
+
+#background1{
+    position: absolute;
+    top: -250%;
+    left: 0;
+    z-index: -2;
+    width: 100%;
+    height: auto;
+}
+#background2{
+    position: absolute;
+    top: 0;
+    left: 0;
+    z-index: -2;
+    width: 100%;
+    height: auto;
+}
+/*@media (min-aspect-ratio: 1/1){
+    .background{
+        width: 100%;
+        height: auto;
+    }
+}
+@media (max-aspect-ratio: 1/1){
+    .background{
+        width: 100%;
+        height: auto;
+    }
+}*/
 
 body{
-    font-family: 'Abyssinica SIL', serif;
-    padding: 0;
-    margin: 0;
-    font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
-    display: flex;
-    justify-content: center;
-    align-items: center;   
-    min-height: 100vh;
+
+display: flex;
+
+align-items: center;
+
+/*justify-content: center;*/
+
+min-height: 100vh;
+
+/*background: #4A98F7;
+background: url(img/TSHIRTS/test_tshirt\ -\ Copie.png);
+background-position: center;
+background-repeat: no-repeat;
+background-size: 100% 130vh;*/
+}
+.choose:hover, .choose:active{
+    background-color: #000;
+    color: #fff;
+}
+.size-text{
+    border: 1px solid black;
+    background-color: #fff;
+    z-index: 0;
+    position: absolute;
+    top: 53vh;
+    left: 5vh;
+}
+.size-text ul{
+    list-style-type: none;
+}
+.size{
+    padding: 15px;
+}
+.text{
+    border-top: 1px solid black;
+    padding: 15px;
+}
+
+input{
+    border: 1px solid #000;
+    border-radius: 0;
+    background-color: #fff;
+    color: #000;
+    font-family: 'Roboto Condensed', sans-serif;
+    text-transform: uppercase;  
+}
+
+.text-follow{
+    z-index: 1;
+    background-color: #4A98F7;
+    position:absolute;
+    transform:translate(-50%,-50%);
+    height:35px;
+    width:35px;
+    border-radius:50%;
+    border:2px solid black;
+}
+
+
+.text-side{
+    color: #000;
+    border: 1px solid black;
+    background-color: #fff;
+    width: 350px;
+    position: absolute;
+    top: 8vh;
+    left: 5vh;
+    padding: 10px;
+    text-align: left;
+}
+
+/*.text-side img{
+    border: 1px solid black;
+    position: absolute;
+    top: 50vh;
+    left: 25vh;
+}*/
+
+#text, #show-text, #erase-text{
+    cursor: pointer;
+}
+
+#show-text{
+    font-weight: bold;
+}
+
+.t-shirt img{
+    position: absolute;
+    top: 5vh;
+    left: 54.5vh;
+    height: 88%;
+    width: auto;
+    z-index: -1;
+}
+.hoodie img{
+    position: absolute;
+    top: 110vh;
+    left: 62vh;
+    height: 95%;
+    width: auto;
+    z-index: -1;
+}
+.jeans img{
+    position: absolute;
+    top: 210vh;
+    left: 80vh;
+    height: 90%;
+    width: auto;
+    z-index: -1;
+}
+
+.designed{
+    position: absolute;
+    top: 85vh;
+    left: 87.5vh;
+    width: 200px;
+    height: 50px;
+    background-color: #fff;
+}
+
+
+
+.container{
+position: absolute;
+
+left: 78vh;
+
+display: flex;
+
+width: 95vh;
+
+gap: 200px;
+
+padding: 10px;
+
+max-width: 1050px;
+
+/*border: 1px solid black;*/
+
+}
+
+section{
+
+background: #fff;
+
+}
+
+.tools-board{
+position: absolute;
+right: 5vh;
+
+border: 1px solid #000;
+
+width: 210px;
+
+padding: 15px 22px 0;
+
+}
+
+.tools-board .row{
+
+margin-bottom: 20px;
+
+}
+
+.row .options{
+
+list-style: none;
+
+margin: px 0 0 5px;
+
+}
+
+.row .options .option{
+
+display: flex;
+
+cursor: pointer;
+
+align-items: center;
+
+margin-bottom: 10px;
+
+}
+
+.option:is(:hover, .active) img{
+
+filter: invert(17%) sepia(90%) saturate(3000%) hue-rotate(900deg) brightness(100%) contrast(100%);
+
+}
+
+.option :where(span, label){
+
+color: #5A6168;
+
+cursor: pointer;
+
+padding-left: 10px;
+
+}
+
+.option:is(:hover, .active) :where(span, label){
+
+color: #000;
+font-weight: bold;
+
+}
+
+/*.choose:is(:hover, .active) img{
+
+filter: invert(17%) sepia(90%) saturate(3000%) hue-rotate(900deg) brightness(100%) contrast(100%);
+
+}*/
+
+.choose :where(span, label){
+
+color: #5A6168;
+
+cursor: pointer;
+
+padding-left: 10px;
+
+}
+
+.choose:is:hover{
+
+color: #000;
+font-weight: bold;
+
+}
+.choose:is.active{
+
+    background-color: #000;
+    color: #fff;
+    font-weight: bold;
+    
+    }
+
+.option #fill-color{
+
+cursor: pointer;
+
+height: 14px;
+
+width: 14px;
+
+}
+
+#fill-color :checked ~ label{
+
+color: #000;
+
+}
+
+.option #size-slider{
+
+width: 100%;
+
+height: 5px;
+
+margin-top: 10px;
+
+}
+
+#goTblanc, #goTnoir{
+
+height: 20px;
+
+width: 20px;
+
+/*border-radius: 50%;*/
+
+margin-top: 3px;
+
+position: relative;
+
+list-style: none;
+
+}
+#goTblanc{
+    background-color: #fff;
+    border: 1px solid #000;
+}
+#goTnoir{
+    background-color: #000;
+}
+
+
+.colors .options{
+
+display: flex;
+
+justify-content: space-between;
+
+}
+
+.colors .option{
+
+height: 20px;
+
+width: 20px;
+
+/*border-radius: 50%;*/
+
+margin-top: 3px;
+
+position: relative;
+
+}
+
+.colors .option:nth-child(1){
+
+background-color: #fff;
+
+border: 1px solid #bfbfbf;
+
+}
+
+.colors .option:nth-child(2){
+
+background-color: #000;
+
+}
+
+.colors .option:nth-child(3){
+
+background-color: #E02020;
+
+}
+
+.colors .option:nth-child(4){
+
+background-color: #6DD400;
+
+}
+
+.colors .option :nth-child(5){
+
+    background-color: #e7d746;
+    
+    }
+
+/*.colors .option :nth-child(6){
+
+background-color: #4A98F7;
+
+}*/
+
+.colors .option.selected ::before {
+
+position: absolute;
+
+content: "";
+
+top: 50%;
+
+left: 50%;
+
+height: 12px;
+
+width: 12px;
+
+background: inherit;
+
+border-radius: inherit;
+
+border: 2px solid #fff;
+
+transform: translate(-50%, -50%);
+
+}
+
+.colors .option :first-child .selected ::before {
+
+border-color: #ccc;
+
+}
+
+/*.option #color-picker{
+
+opacity: 1;
+
+cursor: pointer;
+
+}*/
+
+.buttons button{
+
+width: 100%;
+
+color: #fff;
+
+border: none;
+
+outline: none;
+
+padding: 11px 0;
+
+font-size: 0.9rem;
+
+margin-bottom: 13px;
+
+background: none;
+
+/*border-radius: 4px;*/
+
+cursor: pointer;
+
 }
 button{
-    font-family: 'Abyssinica SIL', serif;
-    font-size: 15px;
-    position: relative;
-    display: block;
-    width: 135px;
-    height: 50px;
-    padding: 10px;
-    margin: 20px;
-    background: black;
+    
+    color: #fff;
+    
+    border: none;
+    
+    outline: none;
+    
+    padding: 11px 0;
+    
+    font-size: 0.9rem;
+    
+    margin-bottom: 13px;
+    
+    background: none;
+    
+    /*border-radius: 4px;*/
+    background-color: #000;
+    
     cursor: pointer;
-    border-radius: 4px;
+    
+    }
+
+.buttons .clear-canvas{
+
+color: #6C757D;
+
+border: 1px solid #6C757D;
+
+transition: all 0.3s ease;
+
+}
+
+.clear-canvas :hover*{
+
+color: #fff;
+
+background: #6C757D;
+
+}
+
+
+.buttons .save-img{
+
+    color: #6C757D;
+    
+    border: 1px solid #6C757D;
+    
+    transition: all 0.3s ease;
+    
+    }
+    
+.save-img :hover*{
+    
+    color: #fff;
+    
+    background: #6C757D;
+    
+}
+
+
+.buttons .pay{
+
+/*background: #4A98F7;*/
+background: #000;
+
+border: 1px solid #000;
+
+}
+.pay img{
+    width: 20%;
+}
+
+
+
+.drawing-board{
+/*flex: 1;*/
+width: 285px;
+height: 285px;
+/*height: 520px;*/
+overflow: hidden;
+border: 1px solid rgba(0,0,0,0.07);
+position: absolute;
+top: 14vh;
+left: 81.7vh;
+}
+.drawing-board2{
+width: 285px;
+height: 520px;
+overflow: hidden;
+border: 1px solid rgba(0,0,0,0.07);
+position: absolute;
+top: 14vh;
+left: 81.7vh;
+}
+.drawing-board canvas, .drawing-board2 canvas{
+width: 100%;
+height: 100%;
+cursor : crosshair;
+}
+
+.authentics-design{
+width: 285px;
+height: 520px;
+}
+#tshirt-name{
+position: absolute;
+top: 87.6vh;
+left: 99vh;
+width: 100px;
+}
+
+.canvasAcacher{
+    /*flex: 1;*/
+    width: 1px;
+    height: 1px;
     overflow: hidden;
-    color: white;
+    border: 1px solid rgba(0,0,0,0.07);
+    position: absolute;
+    top: 0h;
+    right: 0vh;
+    }
+.canvasAcacher canvas{
+    width: 100%;
+    height: 100%;
+    cursor : crosshair;
+    }
+
+
+
+
+
+
+
+/*FOOTER*/
+footer{
+    position: absolute;
+    top: 100vh;
+    left: 0;
+    right: 0;
+    background: #000;
+    height: auto;
+    width: 100%;
+    padding-top: 40px;
+    color: #fff;
 }
-button:hover{
-    color: rgb(221, 221, 221);
-    transition: ease-in 0.3s;
+.footer-content{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    text-align: center;
 }
-button:active{
-    color: rgb(96, 96, 96);
-    transition: ease-in 0.1s;
+.footer-content h3{
+    font-size: 1.8rem;
+    font-weight: 400;
+    text-transform: capitalize;
+    line-height: 3rem;
+}
+.footer-content p{
+    max-width: 500px;
+    margin: 10px auto;
+    line-height: 28px;
+    font-size: 14px;
+}
+.socials{
+    list-style: none;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 1rem 0 3rem 0;
+}
+.socials li{
+    margin: 0 10px;
+}
+.socials a{
+    text-decoration: none;
+    color: #fff;
+}
+.socials a i{
+    font-size: 1.1rem;
+    transition: color .4s ease;
+
+}
+.socials a:hover i{
+    color: aqua;
 }
 
-p{
-    font-family: 'Abyssinica SIL', serif;
-    margin-left: 20px;
+.footer-bottom{
+    background: #000;
+    width: 100%;
+    padding: 20px 0;
+    text-align: center;
+}
+.footer-bottom p{
+    font-size: 14px;
+    word-spacing: 2px;
+    /*text-transform: capitalize;*/
+}
+.footer-bottom span{
+    /*text-transform: uppercase;*/
+    opacity: .4;
+    font-weight: 200;
+}
+/*FOOTER*/
+
+
+
+/*PAGE MAN AND WOMAN*/
+.the-creatives, .the-authentics{
+    border: 1px solid #000;
+    width: 100%;
+    height: 50%;
+    position: absolute;
+    left: 0;
+    margin: 0;
+    overflow: hidden;
+    display: inline-block;
+}
+.the-creatives{
+    top: 0;
+}
+.the-authentics{
+    top: 50%;
+}
+.the-creatives h1, .the-authentics h1{
+    position: relative;
+    left: 3%;
+    top: 45%;
+    color: #fff;
+}
+.the-creatives p, .the-authentics p{
+    position: relative;
+    left: 3%;
+    color: #fff;
+    margin-left: 0.5vh;
+}
+.the-creatives p{
+    position: absolute;
+    top: 49%;
+    left: 17%;
+    color: #fff;
+}
+.the-authentics p{
+    position: absolute;
+    top: 49%;
+    left: 9%;
+    color: #fff;
+}
+.the-creatives-options{
+    position: relative;
+    top: 45%;
+    left: 35%;
+    margin: 10vh;
+}
+.the-creatives-options img {
+    width: 55vh;
+    height: auto;
+}
+.the-creatives-options video {
+    width: 20vh;
+    height: auto;
+    z-index: 1;
+    color: #000;
+}
+.the-creatives-options h2{
+    text-align: center;
+    margin: 2vh;
+}
+.the-creatives-options h2 :active{
+    color: #000;
+}
+#tcm{
+    position: absolute;
+    top: 21%;
+    left: 31%;
+    width: 21vh;
+    height: auto;
+}
+#tcu{
+    position: absolute;
+    top: 13%;
+    right: 31%;
+    width: 21vh;
+    height: auto;
 }
 
-.logo img{
-    width: 43.75px;
-    height: 50px;
+
+
+video{
+    position: absolute;
+    top: 0;
+    left: 0;
+    z-index: -1;
+    width: 100%;
+    /*max-height: 50%;*/
+}
+.acceuil-logo{
+    position: absolute;
+    top: 45%;
+    left: 90%;
+    z-index: 2;
+}
+.acceuil-logo img{
+    width: 110%;
+    height: auto;
+}
+
+
+/*SPECIAL EVENT*/
+.event{
+    position: relative;
+    top: 0;
+    left: 0;
+    height: 10%;
+    width: 100%;
+    color: #000;
+    background-color: #e7d746;
+    z-index: 1;
+}
+.event p{
+    margin-right: 0.7vh;
+    margin-left: 0.15vh;
+    display: inline-block;
 }
